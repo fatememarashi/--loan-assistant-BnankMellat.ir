@@ -2,815 +2,666 @@
 <html lang="fa" dir="rtl">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-    <meta name="color-scheme" content="light dark">
-    <title>محاسبه‌گر وام و پس‌انداز (بانک‌یار)</title>
-    <style>
-        :root {
-            --bg: #ffffff;
-            --card: #ffffff;
-            --muted: #6b7280;
-            --text: #111827;
-            --accent: #ef4444;
-            --danger: #dc2626;
-            --ring: #e5e7eb;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>محاسبه‌گر وام و پس‌انداز (بانک‌یار)</title>
 
-        [data-theme="dark"] {
-            --bg: #0f172a;
-            --card: #111827;
-            --muted: #94a3b8;
-            --text: #e5e7eb;
-            --accent: #ef4444;
-            --danger: #ef4444;
-            --ring: #334155;
-        }
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#ef4444" />
 
-        * {
-            box-sizing: border-box
-        }
+  <style>
+    :root {
+      --bg: #fff;
+      --card: #fff;
+      --muted: #6b7280;
+      --text: #111827;
+      --accent: #ef4444;
+      --danger: #ef4444;
+      --ring: #e5e7eb
+    }
 
-        html,
-        body {
-            height: 100%;
-            -webkit-text-size-adjust: 100%
-        }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent: #ef4444;
+      --danger: #ef4444;
+      --ring: #334155
+    }
 
-        body {
-            margin: 0;
-            padding: calc(16px + env(safe-area-inset-top)) clamp(8px, 4vw, 16px) calc(16px + env(safe-area-inset-bottom));
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Segoe UI Emoji";
-            background: linear-gradient(180deg, var(--bg), #f8fafc 45%, #f1f5f9);
-            color: var(--text);
-        }
+    * {
+      box-sizing: border-box
+    }
 
-        [data-theme="dark"] body {
-            background: linear-gradient(180deg, #0b1025, #0f172a 30%, #0b1025);
-        }
+    html,
+    body {
+      height: 100%;
+      -webkit-text-size-adjust: 100%
+    }
 
-        .container {
-            max-width: 780px;
-            margin: 0 auto
-        }
+    body {
+      margin: 0;
+      padding: calc(16px + env(safe-area-inset-top)) clamp(8px, 4vw, 16px) calc(16px + env(safe-area-inset-bottom));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--bg), #f8fafc 45%, #f1f5f9);
+      color: var(--text)
+    }
 
-        .card {
-            background: var(--card);
-            border: 1px solid var(--ring);
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, .06)
-        }
+    [data-theme="dark"] body {
+      background: linear-gradient(180deg, #0b1025, #0f172a 30%, #0b1025)
+    }
 
-        h1 {
-            font-size: 20px;
-            margin: 0 0 8px 0
-        }
+    .container {
+      max-width: 780px;
+      margin: 0 auto
+    }
 
-        .sub {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 14px
-        }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--ring);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .06)
+    }
 
-        .grid {
-            display: grid;
-            gap: 12px
-        }
+    h1 {
+      font-size: 20px;
+      margin: 0 0 8px 0
+    }
 
-        @media(min-width:640px) {
-            .grid-2 {
-                grid-template-columns: 1fr 1fr
-            }
-        }
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px
+    }
 
-        label {
-            display: block;
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 6px
-        }
+    .grid {
+      display: grid;
+      gap: 12px
+    }
 
-        input,
-        select,
-        button {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--ring);
-            background: #ffffff;
-            color: var(--text);
-            outline: none;
-            font-size: 16px;
-            -webkit-appearance: none;
-            appearance: none
-        }
+    @media(min-width:640px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr
+      }
+    }
 
-        [data-theme="dark"] input,
-        [data-theme="dark"] select,
-        [data-theme="dark"] button {
-            background: #0b1222;
-            color: var(--text)
-        }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px
+    }
 
-        input:focus,
-        select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, .15)
-        }
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--ring);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      font-size: 16px;
+      -webkit-appearance: none;
+      appearance: none
+    }
 
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 6px;
-            flex-wrap: wrap;
-            align-items: stretch;
-            justify-content: space-between
-        }
+    [data-theme="dark"] input,
+    [data-theme="dark"] select,
+    [data-theme="dark"] button {
+      background: #0b1222;
+      color: var(--text)
+    }
 
-        .btn {
-            cursor: pointer;
-            font-weight: 600;
-            letter-spacing: .3px;
-            white-space: nowrap;
-            flex: 1 1 140px;
-            min-width: 120px
-        }
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, .15)
+    }
 
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            border: none
-        }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: space-between
+    }
 
-        .btn-ghost {
-            background: transparent;
-            color: var(--text)
-        }
+    .btn {
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: .3px;
+      white-space: nowrap;
+      flex: 1 1 140px;
+      min-width: 120px
+    }
 
-        .muted {
-            color: var(--muted)
-        }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none
+    }
 
-        .small {
-            font-size: 12px
-        }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text)
+    }
 
-        .row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-top: 8px;
-            flex-wrap: wrap
-        }
+    .muted {
+      color: var(--muted)
+    }
 
-        .result {
-            margin-top: 14px;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px dashed var(--ring);
-            background: #ffffff
-        }
+    .small {
+      font-size: 12px
+    }
 
-        [data-theme="dark"] .result {
-            background: #0b1327
-        }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap
+    }
 
-        .result h2 {
-            margin: 0 0 10px 0;
-            font-size: 16px
-        }
+    .result {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px dashed var(--ring);
+      background: #fff
+    }
 
-        .result p {
-            margin: 6px 0
-        }
+    [data-theme="dark"] .result {
+      background: #0b1327
+    }
 
-        .sep {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--ring), transparent);
-            margin: 14px 0
-        }
+    .result h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px
+    }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 999px;
-            background: #f8fafc;
-            border: 1px solid var(--ring);
-            color: #374151;
-            font-size: 11px
-        }
+    .result p {
+      margin: 6px 0
+    }
 
-        .stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px
-        }
+    .sep {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ring), transparent);
+      margin: 14px 0
+    }
 
-        .switch {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px
-        }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f8fafc;
+      border: 1px solid var(--ring);
+      color: #374151;
+      font-size: 11px
+    }
 
-        .switch input {
-            width: auto
-        }
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
 
-        @media (max-width:480px) {
-            .badge {
-                font-size: 10px
-            }
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px
+    }
 
-            .result {
-                padding: 12px
-            }
+    .switch input {
+      width: auto
+    }
 
-            .card {
-                padding: 12px;
-                border-radius: 12px
-            }
-        }
+    @media(max-width:480px) {
+      .badge {
+        font-size: 10px
+      }
 
-        @media print {
-            body {
-                background: #fff;
-                padding: 0
-            }
+      .result {
+        padding: 12px
+      }
 
-            .actions,
-            .grid,
-            .row .muted,
-            .sub,
-            #optInputs,
-            #bestBox,
-            #timingWrap {
-                display: none !important
-            }
+      .card {
+        padding: 12px;
+        border-radius: 12px
+      }
+    }
 
-            .card {
-                border: none;
-                box-shadow: none;
-                padding: 0
-            }
+    @media print {
+      body {
+        background: #fff;
+        padding: 0
+      }
 
-            .result {
-                border: none
-            }
-        }
-    </style>
+      .actions,
+      .grid,
+      .row .muted,
+      .sub,
+      #bestBox {
+        display: none !important
+      }
+
+      .card {
+        border: none;
+        box-shadow: none;
+        padding: 0
+      }
+
+      .result {
+        border: none
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="card">
-            <h1>محاسبه‌گر وام و پس‌انداز</h1>
-            <div class="sub">سپرده‌ها <b>بدون سود</b> در نظر گرفته شده‌اند. نرخ‌های وام: نیک‌وام ۴٪ (پیش‌فرض)، شایان
-                ۱۴٪/۱۸٪/۲۳٪. <b>الزام طرح‌ها:</b> شایان = سپردهٔ یکجا؛ نیک‌وام = روزشمار.</div>
+  <div class="container">
+    <div class="card">
+      <h1>محاسبه‌گر وام و پس‌انداز</h1>
+      <div class="sub">
+        سپرده‌ها <b>بدون سود</b> در نظر گرفته شده‌اند. نرخ‌های وام: نیک‌وام ۴٪ (پیش‌فرض)، شایان ۱۴٪/۱۸٪/۲۳٪.
+        <b>الزام طرح‌ها:</b> شایان = سپردهٔ یکجا؛ نیک‌وام = روزشمار (واریز پیش‌فرض: ابتدای ماه).
+      </div>
 
-            <div class="grid grid-2">
-                <div>
-                    <label>طرح</label>
-                    <select id="plan">
-                        <option value="شایان">شایان</option>
-                        <option value="نیک وام">نیک وام</option>
-                    </select>
-                </div>
-                <div>
-                    <label>واحد مبلغ</label>
-                    <select id="unitSel">
-                        <option value="toman">تومان</option>
-                        <option value="rial">ریال</option>
-                    </select>
-                </div>
-                <div>
-                    <label>مبلغ وام (<span class="unitLabel">تومان</span>)</label>
-                    <input id="loan" inputmode="numeric" placeholder="مثلاً 120,000,000">
-                </div>
-                <div>
-                    <label>دورهٔ معدل‌گیری (ماه)</label>
-                    <select id="avgMonths"></select>
-                </div>
-                <div>
-                    <label>اقساط بازپرداخت (ماه)</label>
-                    <select id="repayMonths"></select>
-                </div>
-                <div id="typeWrap" style="display:none">
-                    <label>نوع تسهیلات (ویژهٔ شایان)</label>
-                    <select id="loanType"></select>
-                </div>
-                <div id="aprWrap" style="display:none">
-                    <label>سود وام (%)</label>
-                    <select id="loanAprSel"></select>
-                </div>
-                <div id="timingWrap" style="display:none">
-                    <label>زمان واریز (نیک‌وام)</label>
-                    <select id="timingSel">
-                        <option value="end">انتهای ماه (پیش‌فرض)</option>
-                        <option value="begin">ابتدای ماه</option>
-                    </select>
-                </div>
-                <div>
-                    <label>موجودی اولیهٔ سپرده (<span class="unitLabel">تومان</span>)</label>
-                    <input id="initBal" inputmode="numeric" placeholder="در صورت نبود 0">
-                </div>
-            </div>
-
-            <div class="grid grid-2" id="optInputs">
-                <div>
-                    <label>توان واریز ماهانه (برای نیک‌وام) (<span class="unitLabel">تومان</span>)</label>
-                    <input id="optPmt" inputmode="numeric" placeholder="مثلاً 5,000,000">
-                </div>
-                <div>
-                    <label>سپردهٔ یکجا که می‌خوای (برای شایان) (<span class="unitLabel">تومان</span>)</label>
-                    <input id="optLump" inputmode="numeric" placeholder="مثلاً 120,000,000">
-                </div>
-            </div>
-
-            <div class="row">
-                <span class="muted small">حداقل وام: <span class="badge">نیک‌وام ۳۰میلیون</span> <span
-                        class="badge">شایان ۵۰میلیون</span> <span class="badge">سپرده: بدون سود</span></span>
-                <div class="actions">
-                    <button class="btn btn-ghost" id="resetBtn">-reset-</button>
-                    <button class="btn btn-ghost" id="csvBtn">CSV جدول‌ها</button>
-                    <button class="btn btn-ghost" id="optBtn">پیشنهاد نهایی</button>
-                    <button class="btn btn-ghost" id="pdfBtn">خروجی PDF</button>
-                    <label class="switch"><input type="checkbox" id="themeToggle"> حالت تیره</label>
-                    <button class="btn btn-primary" id="calcBtn">محاسبه</button>
-                </div>
-            </div>
-
-            <div class="sep"></div>
-
-            <div class="stack small">
-                <span class="badge" id="coefBadge">ضریب: -</span>
-                <span class="badge" id="aprBadge">سود وام: -</span>
-            </div>
-
-            <div class="result" id="result" hidden>
-                <h2>نتیجه</h2>
-                <p id="minMsg" class="small" style="color:#fecaca" hidden></p>
-                <p><span class="muted">معدل سپردهٔ لازم:</span> <b id="avgNeeded">-</b> <span
-                        class="unitLabel">تومان</span></p>
-                <p><span class="muted">سپردهٔ ثابت لازم از امروز (اضافه بر موجودی فعلی):</span> <b id="lumpExtra">-</b>
-                    <span class="unitLabel">تومان</span>
-                </p>
-                <p class="small muted">ماندهٔ هدفِ ثابت: <b id="lumpTarget">-</b> <span class="unitLabel">تومان</span>
-                </p>
-
-                <p id="pmtRow"><span class="muted">اگر بخواهید ماه‌به‌ماه واریز کنید (نیک‌وام روزشمار، واریز <span
-                            id="timingWord">انتهای</span> ماه):</span>
-                    <b id="pmt">-</b> <span class="unitLabel">تومان</span> در ماه طی <span id="avgMonthsShow">-</span>
-                    ماه
-                </p>
-                <p class="small muted" id="formulaNote">مدل معدل نیک‌وام (روزشمار): Average = B₀ + P × (n−1)/2</p>
-
-                <!-- اثر روزانهٔ معدل (فقط برای نیک‌وام نمایش داده می‌شود) -->
-                <p id="perDayRow" style="display:none; margin-top:8px;">
-                    <span class="muted">اثر روزانهٔ معدل:</span>
-                    هر ۱,۰۰۰,۰۰۰ → <b id="perDay1m">-</b> <span class="unitLabel">تومان</span>
-                    <span class="muted" style="padding-inline:6px;">|</span>
-                    مبلغ دلخواه:
-                    <input id="perDayAmt" inputmode="numeric" placeholder="مثلاً 3,500,000"
-                        style="max-width:180px; margin-inline:6px;">
-                    ← اثر: <b id="perDayCustom">-</b> <span class="unitLabel">تومان</span>
-                </p>
-
-                <p><span class="muted">قسط ماهانهٔ وام (بر اساس سود و بازپرداخت انتخاب‌شده):</span>
-                    <b id="installment">-</b> <span class="unitLabel">تومان</span> <span class="small muted"
-                        id="aprInfo"></span>
-                </p>
-                <div class="sep"></div>
-            </div>
-
-            <div class="result" id="bestBox" hidden>
-                <h2>پیشنهاد نهایی</h2>
-                <p id="bestSummary">-</p>
-                <p class="small muted" id="bestWhy"></p>
-            </div>
+      <div class="grid grid-2">
+        <div>
+          <label>طرح</label>
+          <select id="plan">
+            <option value="شایان">شایان</option>
+            <option value="نیک وام" selected>نیک وام</option>
+          </select>
         </div>
+        <div>
+          <label>واحد مبلغ</label>
+          <select id="unitSel">
+            <option value="toman" selected>تومان</option>
+            <option value="rial">ریال</option>
+          </select>
+        </div>
+        <div>
+          <label>مبلغ وام (<span class="unitLabel">تومان</span>)</label>
+          <input id="loan" inputmode="numeric" placeholder="مثلاً 120,000,000">
+        </div>
+        <div>
+          <label>دورهٔ معدل‌گیری (ماه)</label>
+          <select id="avgMonths"></select>
+        </div>
+        <div>
+          <label>اقساط بازپرداخت (ماه)</label>
+          <select id="repayMonths"></select>
+        </div>
+        <!-- فقط شایان -->
+        <div id="typeWrap" style="display:none">
+          <label>نوع تسهیلات (شایان)</label>
+          <select id="loanType"></select>
+        </div>
+        <div id="aprWrap" style="display:none">
+          <label>سود وام (%)</label>
+          <select id="loanAprSel"></select>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="muted small">
+          حداقل وام: <span class="badge">نیک‌وام ۳۰میلیون</span>
+          <span class="badge">شایان ۵۰میلیون</span>
+          <span class="badge">سپرده: بدون سود</span>
+        </span>
+        <div class="actions">
+          <button class="btn btn-ghost" id="resetBtn">-reset-</button>
+          <button class="btn btn-ghost" id="csvBtn">CSV جدول‌ها</button>
+          <button class="btn btn-ghost" id="pdfBtn">خروجی PDF</button>
+          <label class="switch"><input type="checkbox" id="themeToggle"> حالت تیره</label>
+          <button class="btn btn-primary" id="calcBtn">محاسبه</button>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="stack small">
+        <span class="badge" id="coefBadge">ضریب: -</span>
+        <span class="badge" id="aprBadge">سود وام: -</span>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <h2>نتیجه</h2>
+        <p id="minMsg" class="small" style="color:#fecaca" hidden></p>
+
+        <p><span class="muted">معدل سپردهٔ لازم:</span>
+          <b id="avgNeeded">-</b> <span class="unitLabel">تومان</span>
+        </p>
+
+        <p><span class="muted">قسط ماهانهٔ وام:</span>
+          <b id="installment">-</b> <span class="unitLabel">تومان</span>
+          <span class="small muted" id="aprInfo"></span>
+        </p>
+        <div class="sep"></div>
+      </div>
+
+      <div class="result" id="bestBox" hidden>
+        <h2>پیشنهاد نهایی</h2>
+        <p id="bestSummary">-</p>
+        <p class="small muted" id="bestWhy"></p>
+      </div>
     </div>
+  </div>
 
-    <script>
-        /* ===== جدول طرح‌ها ===== */
-        const SCHEMES = [
-            // شایان - یک‌ماهه
-            { plan: "شایان", avg: 1, repay: 12, type: "مرابحه/جعاله", loanApr: 23, coef: 50 },
-            { plan: "شایان", avg: 1, repay: 12, type: "کارت اعتباری", loanApr: 23, coef: 100 },
-            { plan: "شایان", avg: 1, repay: 24, type: "کارت اعتباری", loanApr: 23, coef: 50 },
-            // شایان - دوماهه
-            { plan: "شایان", avg: 2, repay: 12, type: "مرابحه/جعاله", loanApr: 23, coef: 150 },
-            { plan: "شایان", avg: 2, repay: 12, type: "کارت اعتباری", loanApr: 23, coef: 300 },
-            { plan: "شایان", avg: 2, repay: 24, type: "مرابحه/جعاله", loanApr: 23, coef: 55 },
-            { plan: "شایان", avg: 2, repay: 24, type: "کارت اعتباری", loanApr: 23, coef: 60 },
-            { plan: "شایان", avg: 2, repay: 36, type: "جعاله", loanApr: 23, coef: 30 },
-            { plan: "شایان", avg: 2, repay: 36, type: "اعتباری", loanApr: 23, coef: 35 },
-            // شایان - سه‌ماهه و بالاتر
-            { plan: "شایان", avg: 3, repay: 12, type: "جعاله", loanApr: 23, coef: 200 },
-            { plan: "شایان", avg: 3, repay: 12, type: "اعتباری", loanApr: 23, coef: 450 },
-            { plan: "شایان", avg: 3, repay: 12, type: "جعاله", loanApr: 18, coef: 80 },
-            { plan: "شایان", avg: 3, repay: 12, type: "اعتباری", loanApr: 18, coef: 100 },
-            { plan: "شایان", avg: 3, repay: 24, type: "جعاله", loanApr: 23, coef: 80 },
-            { plan: "شایان", avg: 3, repay: 24, type: "اعتباری", loanApr: 23, coef: 100 },
-            { plan: "شایان", avg: 3, repay: 24, type: "جعاله", loanApr: 18, coef: 40 },
-            { plan: "شایان", avg: 3, repay: 24, type: "اعتباری", loanApr: 18, coef: 50 },
-            { plan: "شایان", avg: 3, repay: 36, type: "جعاله", loanApr: 23, coef: 50 },
-            { plan: "شایان", avg: 3, repay: 36, type: "اعتباری", loanApr: 23, coef: 60 },
-            { plan: "شایان", avg: 3, repay: 48, type: "جعاله", loanApr: 23, coef: 30 },
-            { plan: "شایان", avg: 3, repay: 48, type: "اعتباری", loanApr: 23, coef: 35 },
+  <script>
+    'use strict';
+    /* ===== داده‌ها ===== */
+    const SCHEMES = [
+      /* --- شایان (نمونه کامل) --- */
+      { plan: "شایان", avg: 1, repay: 12, type: "مرابحه/جعاله", loanApr: 23, coef: 50 },
+      { plan: "شایان", avg: 1, repay: 12, type: "کارت اعتباری", loanApr: 23, coef: 100 },
+      { plan: "شایان", avg: 1, repay: 24, type: "کارت اعتباری", loanApr: 23, coef: 50 },
+      { plan: "شایان", avg: 2, repay: 12, type: "مرابحه/جعاله", loanApr: 23, coef: 150 },
+      { plan: "شایان", avg: 2, repay: 12, type: "کارت اعتباری", loanApr: 23, coef: 300 },
+      { plan: "شایان", avg: 2, repay: 24, type: "مرابحه/جعاله", loanApr: 23, coef: 55 },
+      { plan: "شایان", avg: 2, repay: 24, type: "کارت اعتباری", loanApr: 23, coef: 60 },
+      { plan: "شایان", avg: 2, repay: 36, type: "جعاله", loanApr: 23, coef: 30 },
+      { plan: "شایان", avg: 2, repay: 36, type: "اعتباری", loanApr: 23, coef: 35 },
+      { plan: "شایان", avg: 3, repay: 12, type: "جعاله", loanApr: 23, coef: 200 },
+      { plan: "شایان", avg: 3, repay: 12, type: "اعتباری", loanApr: 23, coef: 450 },
+      { plan: "شایان", avg: 3, repay: 12, type: "جعاله", loanApr: 18, coef: 80 },
+      { plan: "شایان", avg: 3, repay: 12, type: "اعتباری", loanApr: 18, coef: 100 },
+      { plan: "شایان", avg: 3, repay: 24, type: "جعاله", loanApr: 23, coef: 80 },
+      { plan: "شایان", avg: 3, repay: 24, type: "اعتباری", loanApr: 23, coef: 100 },
+      { plan: "شایان", avg: 3, repay: 24, type: "جعاله", loanApr: 18, coef: 40 },
+      { plan: "شایان", avg: 3, repay: 24, type: "اعتباری", loanApr: 18, coef: 50 },
+      { plan: "شایان", avg: 3, repay: 36, type: "جعاله", loanApr: 23, coef: 50 },
+      { plan: "شایان", avg: 3, repay: 36, type: "اعتباری", loanApr: 23, coef: 60 },
+      { plan: "شایان", avg: 3, repay: 48, type: "جعاله", loanApr: 23, coef: 30 },
+      { plan: "شایان", avg: 3, repay: 48, type: "اعتباری", loanApr: 23, coef: 35 },
+      /* ۶ ماهه‌ها */
+      { plan: "شایان", avg: 6, repay: 12, type: "اعتباری", loanApr: 14, coef: 130 },
+      { plan: "شایان", avg: 6, repay: 12, type: "جعاله", loanApr: 14, coef: 110 },
+      { plan: "شایان", avg: 6, repay: 12, type: "اعتباری", loanApr: 18, coef: 170 },
+      { plan: "شایان", avg: 6, repay: 12, type: "جعاله", loanApr: 18, coef: 200 },
+      { plan: "شایان", avg: 6, repay: 12, type: "اعتباری", loanApr: 23, coef: 220 },
+      { plan: "شایان", avg: 6, repay: 12, type: "جعاله", loanApr: 23, coef: 285 },
+      { plan: "شایان", avg: 6, repay: 24, type: "اعتباری", loanApr: 14, coef: 55 },
+      { plan: "شایان", avg: 6, repay: 24, type: "جعاله", loanApr: 14, coef: 60 },
+      { plan: "شایان", avg: 6, repay: 24, type: "اعتباری", loanApr: 18, coef: 70 },
+      { plan: "شایان", avg: 6, repay: 24, type: "جعاله", loanApr: 18, coef: 75 },
+      { plan: "شایان", avg: 6, repay: 24, type: "اعتباری", loanApr: 23, coef: 150 },
+      { plan: "شایان", avg: 6, repay: 24, type: "جعاله", loanApr: 23, coef: 200 },
+      { plan: "شایان", avg: 6, repay: 36, type: "اعتباری", loanApr: 18, coef: 45 },
+      { plan: "شایان", avg: 6, repay: 36, type: "جعاله", loanApr: 18, coef: 50 },
+      { plan: "شایان", avg: 6, repay: 36, type: "اعتباری", loanApr: 23, coef: 110 },
+      { plan: "شایان", avg: 6, repay: 36, type: "جعاله", loanApr: 23, coef: 125 },
+      { plan: "شایان", avg: 6, repay: 48, type: "اعتباری", loanApr: 23, coef: 90 },
+      { plan: "شایان", avg: 6, repay: 48, type: "جعاله", loanApr: 23, coef: 75 },
 
-            // شایان - معدل‌گیری ۶ ماهه (۱۴/۱۸/۲۳)
-            { plan: "شایان", avg: 6, repay: 12, type: "اعتباری", loanApr: 14, coef: 130 },
-            { plan: "شایان", avg: 6, repay: 12, type: "جعاله", loanApr: 14, coef: 110 },
-            { plan: "شایان", avg: 6, repay: 12, type: "اعتباری", loanApr: 18, coef: 170 },
-            { plan: "شایان", avg: 6, repay: 12, type: "جعاله", loanApr: 18, coef: 200 },
-            { plan: "شایان", avg: 6, repay: 12, type: "اعتباری", loanApr: 23, coef: 220 },
-            { plan: "شایان", avg: 6, repay: 12, type: "جعاله", loanApr: 23, coef: 285 },
-            { plan: "شایان", avg: 6, repay: 24, type: "اعتباری", loanApr: 14, coef: 55 },
-            { plan: "شایان", avg: 6, repay: 24, type: "جعاله", loanApr: 14, coef: 60 },
-            { plan: "شایان", avg: 6, repay: 24, type: "اعتباری", loanApr: 18, coef: 70 },
-            { plan: "شایان", avg: 6, repay: 24, type: "جعاله", loanApr: 18, coef: 75 },
-            { plan: "شایان", avg: 6, repay: 24, type: "اعتباری", loanApr: 23, coef: 150 },
-            { plan: "شایان", avg: 6, repay: 24, type: "جعاله", loanApr: 23, coef: 200 },
-            { plan: "شایان", avg: 6, repay: 36, type: "اعتباری", loanApr: 18, coef: 45 },
-            { plan: "شایان", avg: 6, repay: 36, type: "جعاله", loanApr: 18, coef: 50 },
-            { plan: "شایان", avg: 6, repay: 36, type: "اعتباری", loanApr: 23, coef: 110 },
-            { plan: "شایان", avg: 6, repay: 36, type: "جعاله", loanApr: 23, coef: 125 },
-            { plan: "شایان", avg: 6, repay: 48, type: "اعتباری", loanApr: 23, coef: 90 },
-            { plan: "شایان", avg: 6, repay: 48, type: "جعاله", loanApr: 23, coef: 75 },
+      /* --- نیک‌وام ۴٪ --- */
+      { plan: "نیک وام", avg: 1, repay: 12, type: "—", loanApr: 4, coef: 27 },
+      { plan: "نیک وام", avg: 1, repay: 24, type: "—", loanApr: 4, coef: 15 },
+      { plan: "نیک وام", avg: 1, repay: 36, type: "—", loanApr: 4, coef: 10 },
+      { plan: "نیک وام", avg: 2, repay: 12, type: "—", loanApr: 4, coef: 55 },
+      { plan: "نیک وام", avg: 2, repay: 24, type: "—", loanApr: 4, coef: 30 },
+      { plan: "نیک وام", avg: 2, repay: 36, type: "—", loanApr: 4, coef: 20 },
+      { plan: "نیک وام", avg: 2, repay: 48, type: "—", loanApr: 4, coef: 15 },
+      { plan: "نیک وام", avg: 3, repay: 12, type: "—", loanApr: 4, coef: 80 },
+      { plan: "نیک وام", avg: 3, repay: 24, type: "—", loanApr: 4, coef: 40 },
+      { plan: "نیک وام", avg: 3, repay: 36, type: "—", loanApr: 4, coef: 30 },
+      { plan: "نیک وام", avg: 3, repay: 48, type: "—", loanApr: 4, coef: 20 },
+      { plan: "نیک وام", avg: 3, repay: 60, type: "—", loanApr: 4, coef: 15 },
+      { plan: "نیک وام", avg: 4, repay: 12, type: "—", loanApr: 4, coef: 110 },
+      { plan: "نیک وام", avg: 4, repay: 24, type: "—", loanApr: 4, coef: 55 },
+      { plan: "نیک وام", avg: 4, repay: 36, type: "—", loanApr: 4, coef: 40 },
+      { plan: "نیک وام", avg: 4, repay: 48, type: "—", loanApr: 4, coef: 30 },
+      { plan: "نیک وام", avg: 4, repay: 60, type: "—", loanApr: 4, coef: 20 },
+      { plan: "نیک وام", avg: 6, repay: 12, type: "—", loanApr: 4, coef: 160 },
+      { plan: "نیک وام", avg: 6, repay: 24, type: "—", loanApr: 4, coef: 80 },
+      { plan: "نیک وام", avg: 6, repay: 36, type: "—", loanApr: 4, coef: 60 },
+      { plan: "نیک وام", avg: 6, repay: 48, type: "—", loanApr: 4, coef: 45 },
+      { plan: "نیک وام", avg: 6, repay: 60, type: "—", loanApr: 4, coef: 30 },
+      { plan: "نیک وام", avg: 12, repay: 12, type: "—", loanApr: 4, coef: 320 },
+      { plan: "نیک وام", avg: 12, repay: 24, type: "—", loanApr: 4, coef: 160 },
+      { plan: "نیک وام", avg: 12, repay: 36, type: "—", loanApr: 4, coef: 110 },
+      { plan: "نیک وام", avg: 12, repay: 48, type: "—", loanApr: 4, coef: 80 },
+      { plan: "نیک وام", avg: 12, repay: 60, type: "—", loanApr: 4, coef: 60 },
+    ];
+    const MIN_LOAN = { "نیک وام": 30000000, "شایان": 50000000 };
 
-            // نیک وام (سود پیش‌فرض ۴٪، نوع ندارد)
-            { plan: "نیک وام", avg: 1, repay: 12, type: "—", loanApr: 4, coef: 27 },
-            { plan: "نیک وام", avg: 1, repay: 24, type: "—", loanApr: 4, coef: 15 },
-            { plan: "نیک وام", avg: 1, repay: 36, type: "—", loanApr: 4, coef: 10 },
-            { plan: "نیک وام", avg: 2, repay: 12, type: "—", loanApr: 4, coef: 55 },
-            { plan: "نیک وام", avg: 2, repay: 24, type: "—", loanApr: 4, coef: 30 },
-            { plan: "نیک وام", avg: 2, repay: 36, type: "—", loanApr: 4, coef: 20 },
-            { plan: "نیک وام", avg: 2, repay: 48, type: "—", loanApr: 4, coef: 15 },
-            { plan: "نیک وام", avg: 3, repay: 12, type: "—", loanApr: 4, coef: 80 },
-            { plan: "نیک وام", avg: 3, repay: 24, type: "—", loanApr: 4, coef: 40 },
-            { plan: "نیک وام", avg: 3, repay: 36, type: "—", loanApr: 4, coef: 30 },
-            { plan: "نیک وام", avg: 3, repay: 48, type: "—", loanApr: 4, coef: 20 },
-            { plan: "نیک وام", avg: 3, repay: 60, type: "—", loanApr: 4, coef: 15 },
-            { plan: "نیک وام", avg: 4, repay: 12, type: "—", loanApr: 4, coef: 110 },
-            { plan: "نیک وام", avg: 4, repay: 24, type: "—", loanApr: 4, coef: 55 },
-            { plan: "نیک وام", avg: 4, repay: 36, type: "—", loanApr: 4, coef: 40 },
-            { plan: "نیک وام", avg: 4, repay: 48, type: "—", loanApr: 4, coef: 30 },
-            { plan: "نیک وام", avg: 4, repay: 60, type: "—", loanApr: 4, coef: 20 },
-            { plan: "نیک وام", avg: 6, repay: 12, type: "—", loanApr: 4, coef: 160 },
-            { plan: "نیک وام", avg: 6, repay: 24, type: "—", loanApr: 4, coef: 80 },
-            { plan: "نیک وام", avg: 6, repay: 36, type: "—", loanApr: 4, coef: 60 },
-            { plan: "نیک وام", avg: 6, repay: 48, type: "—", loanApr: 4, coef: 45 },
-            { plan: "نیک وام", avg: 6, repay: 60, type: "—", loanApr: 4, coef: 30 },
-            { plan: "نیک وام", avg: 12, repay: 12, type: "—", loanApr: 4, coef: 320 },
-            { plan: "نیک وام", avg: 12, repay: 24, type: "—", loanApr: 4, coef: 160 },
-            { plan: "نیک وام", avg: 12, repay: 36, type: "—", loanApr: 4, coef: 110 },
-            { plan: "نیک وام", avg: 12, repay: 48, type: "—", loanApr: 4, coef: 80 },
-            { plan: "نیک وام", avg: 12, repay: 60, type: "—", loanApr: 4, coef: 60 },
-        ];
-        const MIN_LOAN = { "نیک وام": 30000000, "شایان": 50000000 };
+    /* ابزارها */
+    function toEnglishDigits(str) { if (str == null) return ""; return String(str).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[^0-9.]/g, ''); }
+    function fmt(n) { return isFinite(n) ? n.toLocaleString('fa-IR', { maximumFractionDigits: 0 }) : "-"; }
+    function formatCurrencyInput(el) { const raw = toEnglishDigits(el.value || "0"); const num = Number(raw); el.value = isFinite(num) ? num.toLocaleString('fa-IR', { maximumFractionDigits: 0 }) : ""; }
+    const unitSel = document.getElementById('unitSel'); let currentUnit = 'toman';
+    function unitIsRial() { return unitSel && unitSel.value === 'rial'; }
+    function unitLabel() { return unitIsRial() ? 'ریال' : 'تومان'; }
+    function fromInput(num) { return unitIsRial() ? (num / 10) : num; }
+    function toDisplay(num) { return unitIsRial() ? (num * 10) : num; }
+    function fmtMoney(n) { const v = toDisplay(n); return isFinite(v) ? fmt(Math.ceil(v)) : "-"; }
+    function updateUnitLabels() { document.querySelectorAll('.unitLabel').forEach(el => el.textContent = unitLabel()); }
+    function convertUnitFields(prev, nxt) {
+      const prevRial = (prev === 'rial'), nxtRial = (nxt === 'rial');
+      [loanInp].forEach(el => {
+        if (!el) return; const raw = Number(toEnglishDigits(el.value || '0')); if (!isFinite(raw)) return;
+        const baseToman = prevRial ? (raw / 10) : raw; const newShown = nxtRial ? (baseToman * 10) : baseToman;
+        el.value = Number(newShown).toLocaleString('fa-IR', { maximumFractionDigits: 0 });
+      });
+      updateUnitLabels(); if (!resBox.hidden) calc();
+    }
 
-        /* ===== ابزارها ===== */
-        function toEnglishDigits(str) { if (str == null) return ""; return String(str).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[^0-9.]/g, ''); }
-        function fmt(n) { return isFinite(n) ? n.toLocaleString('fa-IR', { maximumFractionDigits: 0 }) : "-"; }
-        function formatCurrencyInput(el) { const raw = toEnglishDigits(el.value || "0"); const num = Number(raw); el.value = isFinite(num) ? num.toLocaleString('fa-IR', { maximumFractionDigits: 0 }) : ""; }
+    /* عناصر DOM */
+    const planSel = document.getElementById('plan');
+    const loanInp = document.getElementById('loan');
+    const avgSel = document.getElementById('avgMonths');
+    const repaySel = document.getElementById('repayMonths');
+    const typeWrap = document.getElementById('typeWrap');
+    const typeSel = document.getElementById('loanType');
+    const aprWrap = document.getElementById('aprWrap');
+    const aprSel = document.getElementById('loanAprSel');
+    const calcBtn = document.getElementById('calcBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const csvBtn = document.getElementById('csvBtn');
+    const pdfBtn = document.getElementById('pdfBtn');
+    const themeToggle = document.getElementById('themeToggle');
 
-        /* --- تومان/ریال --- */
-        const unitSel = document.getElementById('unitSel');
-        let currentUnit = 'toman'; // محاسبات داخلی: تومان
-        function unitIsRial() { return unitSel && unitSel.value === 'rial'; }
-        function unitLabel() { return unitIsRial() ? 'ریال' : 'تومان'; }
-        function fromInput(num) { return unitIsRial() ? (num / 10) : num; }  // ورودی → تومان
-        function toDisplay(num) { return unitIsRial() ? (num * 10) : num; }  // تومان → نمایش
-        function fmtMoney(n) { const v = toDisplay(n); return isFinite(v) ? fmt(Math.ceil(v)) : "-"; }
-        function updateUnitLabels() { document.querySelectorAll('.unitLabel').forEach(el => el.textContent = unitLabel()); }
-        function convertUnitFields(prev, nxt) {
-            const prevRial = (prev === 'rial'), nxtRial = (nxt === 'rial');
-            [loanInp, initBal, optPmt, optLump, perDayAmt].forEach(el => {
-                if (!el) return;
-                const raw = Number(toEnglishDigits(el.value || '0')); if (!isFinite(raw)) return;
-                const baseToman = prevRial ? (raw / 10) : raw;
-                const newShown = nxtRial ? (baseToman * 10) : baseToman;
-                el.value = Number(newShown).toLocaleString('fa-IR', { maximumFractionDigits: 0 });
-            });
-            updateUnitLabels();
-            if (!resBox.hidden) calc();
-            if (!bestBox.hidden) optimizeBest();
+    const coefBadge = document.getElementById('coefBadge');
+    const aprBadge = document.getElementById('aprBadge');
+    const resBox = document.getElementById('result');
+    const minMsg = document.getElementById('minMsg');
+    const avgNeededEl = document.getElementById('avgNeeded');
+    const installmentEl = document.getElementById('installment');
+    const aprInfoEl = document.getElementById('aprInfo');
+
+    const bestBox = document.getElementById('bestBox');
+    const bestSummary = document.getElementById('bestSummary');
+    const bestWhy = document.getElementById('bestWhy');
+
+    /* فهرست‌ها */
+    function populateAvg() {
+      avgSel.innerHTML = ""; const p = planSel.value;
+      const avgs = [...new Set(SCHEMES.filter(s => s.plan === p).map(s => s.avg))].sort((a, b) => a - b);
+      avgs.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; avgSel.appendChild(o); });
+    }
+    function populateRepay() {
+      repaySel.innerHTML = ""; const p = planSel.value, a = Number(avgSel.value);
+      const repays = [...new Set(SCHEMES.filter(s => s.plan === p && s.avg === a).map(s => s.repay))].sort((a, b) => a - b);
+      repays.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; repaySel.appendChild(o); });
+    }
+    function populateType() {
+      const p = planSel.value, a = Number(avgSel.value), r = Number(repaySel.value);
+      const types = [...new Set(SCHEMES.filter(s => s.plan === p && s.avg === a && s.repay === r).map(s => s.type))];
+      typeSel.innerHTML = "";
+      if (types.length === 1 && types[0] === "—") { typeWrap.style.display = "none"; }
+      else { typeWrap.style.display = ""; types.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; typeSel.appendChild(o); }); }
+      populateApr(); updateBadges();
+    }
+    function populateApr() {
+      const p = planSel.value, a = Number(avgSel.value), r = Number(repaySel.value);
+      const t = (typeWrap.style.display === "none") ? null : typeSel.value;
+      const matches = SCHEMES.filter(s => s.plan === p && s.avg === a && s.repay === r && (t ? s.type === t : true));
+      const aprs = [...new Set(matches.map(s => s.loanApr).filter(v => v != null))].sort((x, y) => x - y);
+      aprSel.innerHTML = "";
+      if (aprs.length === 0) { aprWrap.style.display = "none"; }
+      else { aprWrap.style.display = ""; aprs.forEach(v => { const o = document.createElement('option'); o.value = String(v); o.textContent = v; aprSel.appendChild(o); }); }
+    }
+    function getSelectedScheme() {
+      const p = planSel.value, a = Number(avgSel.value), r = Number(repaySel.value);
+      const t = (typeWrap.style.display === "none") ? "—" : typeSel.value;
+      const apr = (aprWrap.style.display === "none") ? null : Number(aprSel.value);
+      const pool = SCHEMES.filter(s => s.plan === p && s.avg === a && s.repay === r && s.type === t);
+      if (apr != null && !Number.isNaN(apr)) { const m = pool.find(s => s.loanApr === apr); if (m) return m; }
+      return pool[0];
+    }
+    function updateBadges() {
+      const s = getSelectedScheme();
+      coefBadge.textContent = s ? `ضریب: ${s.coef}%` : "ضریب: -";
+      const aprTxt = (s && s.loanApr != null) ? `${s.loanApr}%` : (aprSel.value || "-");
+      aprBadge.textContent = `سود وام: ${aprTxt}`;
+    }
+
+    /* محاسبات پایه */
+    function calcInstallment(loan, aprPercent, months) {
+      const n = Number(months) || 0, r = (Number(aprPercent) || 0) / 1200;
+      if (!n) return NaN; if (r === 0) return loan / n;
+      const pow = Math.pow(1 + r, n); return loan * r * pow / (pow - 1);
+    }
+
+    /* پیشنهاد نهایی (B0=0) */
+    function buildFinalSuggestion(loan) {
+      // میانگین لازم برای هر طرح:
+      // avgNeeded = loan / (coef/100)
+      const candidates = SCHEMES
+        .filter(s => loan >= (MIN_LOAN[s.plan] || 0))
+        .map(s => {
+          const avgNeeded = loan / (s.coef / 100);
+          if (s.plan === 'نیک وام') {
+            // واریز ابتدای ماه و B0=0 ⇒ P = 2*avgNeeded/(n+1)
+            const P = (2 * avgNeeded) / (s.avg + 1);
+            return { kind: 'nik', s, avgNeeded, monthly: P };
+          } else {
+            // شایان: سپردهٔ ثابت از روز اول
+            return { kind: 'shayan', s, avgNeeded, lump: avgNeeded };
+          }
+        });
+
+      if (!candidates.length) return null;
+
+      // رتبه‌بندی: کمترین avgNeeded ← سود کمتر ← دوره معدل‌گیری کوتاه‌تر ← بازپرداخت کوتاه‌تر
+      candidates.sort((a, b) =>
+        (a.avgNeeded - b.avgNeeded) ||
+        ((a.s.loanApr || 0) - (b.s.loanApr || 0)) ||
+        (a.s.avg - b.s.avg) ||
+        (a.s.repay - b.s.repay)
+      );
+
+      return candidates[0];
+    }
+
+    function calc() {
+      const plan = planSel.value;
+      const loan = fromInput(Number(toEnglishDigits(loanInp.value || "0")));
+      const s = getSelectedScheme();
+      resBox.hidden = false; minMsg.hidden = true;
+      if (!s) { avgNeededEl.textContent = "-"; installmentEl.textContent = "-"; aprInfoEl.textContent = ""; bestBox.hidden = true; return; }
+
+      const minLoan = MIN_LOAN[plan] || 0;
+      if (loan < minLoan) { minMsg.hidden = false; minMsg.textContent = `حداقل مبلغ وام برای «${plan}» ${fmtMoney(minLoan)} ${unitLabel()} است.`; }
+
+      const avgNeeded = loan / (s.coef / 100);
+      avgNeededEl.textContent = fmtMoney(avgNeeded);
+
+      const apr = (s && s.loanApr != null) ? Number(s.loanApr) : 0;
+      const inst = calcInstallment(loan, apr, s.repay);
+      if (isFinite(inst)) {
+        installmentEl.textContent = fmtMoney(Math.ceil(inst));
+        aprInfoEl.textContent = `| سود سالانه ${apr}% → ماهانه ${(apr / 12).toFixed(3)}% | اقساط ${s.repay}‌ماهه`;
+      } else { installmentEl.textContent = "-"; aprInfoEl.textContent = ""; }
+
+      // پیشنهاد نهایی بر اساس مبلغ وام با B0=0
+      const best = buildFinalSuggestion(loan);
+      if (best) {
+        bestBox.hidden = false;
+        if (best.kind === 'nik') {
+          bestSummary.textContent = `پیشنهاد: نیک‌وام — ${best.s.avg} ماه معدل‌گیری، بازپرداخت ${best.s.repay} ماه @ ${best.s.loanApr}%`;
+          bestWhy.textContent = `برای رسیدن به میانگین لازم بدون سپردهٔ اولیه، واریز ماهانهٔ حدود ${fmtMoney(best.monthly)} ${unitLabel()} (ابتدای هر ماه) نیاز است.`;
+        } else {
+          bestSummary.textContent = `پیشنهاد: شایان — ${best.s.avg} ماه معدل‌گیری، بازپرداخت ${best.s.repay} ماه، نوع ${best.s.type} @ ${best.s.loanApr}%`;
+          bestWhy.textContent = `برای واجد شرایط شدن باید از امروز سپردهٔ ثابتِ حدود ${fmtMoney(best.lump)} ${unitLabel()} نگه دارید.`;
         }
+      } else {
+        bestBox.hidden = false;
+        bestSummary.textContent = 'برای مبلغ واردشده ترکیبی پیدا نشد.';
+        bestWhy.textContent = 'حداقل وام نیک‌وام ۳۰میلیون و شایان ۵۰میلیون است.';
+      }
 
-        /* ===== عناصر ===== */
-        const planSel = document.getElementById('plan');
-        const loanInp = document.getElementById('loan');
-        const avgSel = document.getElementById('avgMonths');
-        const repaySel = document.getElementById('repayMonths');
-        const typeWrap = document.getElementById('typeWrap');
-        const typeSel = document.getElementById('loanType');
-        const aprWrap = document.getElementById('aprWrap');
-        const aprSel = document.getElementById('loanAprSel');
-        const initBal = document.getElementById('initBal');
-        const timingWrap = document.getElementById('timingWrap');
-        const timingSel = document.getElementById('timingSel');
-        const calcBtn = document.getElementById('calcBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const csvBtn = document.getElementById('csvBtn');
-        const optBtn = document.getElementById('optBtn');
-        const optPmt = document.getElementById('optPmt');
-        const optLump = document.getElementById('optLump');
-        const bestBox = document.getElementById('bestBox');
-        const bestSummary = document.getElementById('bestSummary');
-        const bestWhy = document.getElementById('bestWhy');
-        const coefBadge = document.getElementById('coefBadge');
-        const aprBadge = document.getElementById('aprBadge');
-        const resBox = document.getElementById('result');
-        const avgNeededEl = document.getElementById('avgNeeded');
-        const pmtEl = document.getElementById('pmt');
-        const pmtRow = document.getElementById('pmtRow');
-        const formulaNote = document.getElementById('formulaNote');
-        const lumpExtraEl = document.getElementById('lumpExtra');
-        const lumpTargetEl = document.getElementById('lumpTarget');
-        const avgMonthsShow = document.getElementById('avgMonthsShow');
-        const minMsg = document.getElementById('minMsg');
-        const pdfBtn = document.getElementById('pdfBtn');
-        const themeToggle = document.getElementById('themeToggle');
-        const installmentEl = document.getElementById('installment');
-        const aprInfoEl = document.getElementById('aprInfo');
-        const timingWord = document.getElementById('timingWord');
+      updateBadges(); updateUnitLabels();
+    }
 
-        /* اثر روزانه */
-        const perDayRow = document.getElementById('perDayRow');
-        const perDay1mEl = document.getElementById('perDay1m');
-        const perDayAmt = document.getElementById('perDayAmt');
-        const perDayCustomEl = document.getElementById('perDayCustom');
-        let lastAvgMonths = 0;
+    function resetForm() {
+      loanInp.value = ""; resBox.hidden = true; minMsg.hidden = true;
+      avgNeededEl.textContent = "-"; installmentEl.textContent = "-"; aprInfoEl.textContent = "";
+      bestBox.hidden = true; bestSummary.textContent = "-"; bestWhy.textContent = "";
+    }
 
-        /* ===== فهرست‌ها ===== */
-        function populateAvg() {
-            avgSel.innerHTML = "";
-            const p = planSel.value;
-            const avgs = [...new Set(SCHEMES.filter(s => s.plan === p).map(s => s.avg))].sort((a, b) => a - b);
-            avgs.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; avgSel.appendChild(o); });
-        }
-        function populateRepay() {
-            repaySel.innerHTML = "";
-            const p = planSel.value, a = Number(avgSel.value);
-            const repays = [...new Set(SCHEMES.filter(s => s.plan === p && s.avg === a).map(s => s.repay))].sort((a, b) => a - b);
-            repays.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; repaySel.appendChild(o); });
-        }
-        function populateType() {
-            const p = planSel.value, a = Number(avgSel.value), r = Number(repaySel.value);
-            const types = [...new Set(SCHEMES.filter(s => s.plan === p && s.avg === a && s.repay === r).map(s => s.type))];
-            typeSel.innerHTML = "";
-            if (types.length === 1 && types[0] === "—") { typeWrap.style.display = "none"; }
-            else { typeWrap.style.display = ""; types.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; typeSel.appendChild(o); }); }
-            populateApr(); updateBadges(); updateTimingVisibility();
-        }
-        function populateApr() {
-            const p = planSel.value, a = Number(avgSel.value), r = Number(repaySel.value);
-            const t = (typeWrap.style.display === "none") ? null : typeSel.value;
-            let matches = SCHEMES.filter(s => s.plan === p && s.avg === a && s.repay === r && (t ? s.type === t : true));
-            const aprs = [...new Set(matches.map(s => s.loanApr).filter(v => v != null))].sort((x, y) => x - y);
-            aprSel.innerHTML = "";
-            if (aprs.length === 0) { aprWrap.style.display = "none"; }
-            else { aprWrap.style.display = ""; aprs.forEach(v => { const o = document.createElement('option'); o.value = String(v); o.textContent = v; aprSel.appendChild(o); }); }
-        }
-        function updateTimingVisibility() { timingWrap.style.display = (planSel.value === "نیک وام") ? "" : "none"; }
+    /* CSV (لیست طرح‌ها) */
+    function downloadCSV() {
+      const header = ['plan', 'avg_months', 'repay_months', 'type', 'loan_apr', 'coef'];
+      const rows = [header].concat(SCHEMES.map(s => [s.plan, s.avg, s.repay, s.type, s.loanApr, s.coef]));
+      const lines = rows.map(r => r.map(v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+      const csvText = 'sep=,\r\n' + lines;
+      function toUTF16LEWithBOM(str) {
+        const buf = new ArrayBuffer((str.length + 1) * 2); const view = new DataView(buf);
+        view.setUint16(0, 0xFEFF, true); for (let i = 0; i < str.length; i++) { view.setUint16(2 + i * 2, str.charCodeAt(i), true); }
+        return buf;
+      }
+      const blob = new Blob([toUTF16LEWithBOM(csvText)], { type: 'text/csv;charset=utf-16le;' });
+      const url = URL.createObjectURL(blob); const a = document.createElement('a');
+      a.href = url; a.download = 'loan_schemes.csv'; document.body.appendChild(a); a.click();
+      URL.revokeObjectURL(url); a.remove();
+    }
 
-        function getSelectedScheme() {
-            const p = planSel.value, a = Number(avgSel.value), r = Number(repaySel.value);
-            const t = (typeWrap.style.display === "none") ? "—" : typeSel.value;
-            const apr = (aprWrap.style.display === "none") ? null : Number(aprSel.value);
-            let pool = SCHEMES.filter(s => s.plan === p && s.avg === a && s.repay === r && s.type === t);
-            if (apr != null && !Number.isNaN(apr)) { const m = pool.find(s => s.loanApr === apr); if (m) return m; }
-            return pool[0];
-        }
-        function updateBadges() {
-            const s = getSelectedScheme();
-            coefBadge.textContent = s ? `ضریب: ${s.coef}%` : "ضریب: -";
-            const aprTxt = (s && s.loanApr != null) ? `${s.loanApr}%` : (aprWrap.style.display === "none" ? "-" : (aprSel.value || "-"));
-            aprBadge.textContent = `سود وام: ${aprTxt}`;
-        }
+    /* رویدادها */
+    function updateAll() { populateAvg(); populateRepay(); populateType(); updateBadges(); }
+    planSel.addEventListener('change', updateAll);
+    avgSel.addEventListener('change', () => { populateRepay(); populateType(); updateBadges(); });
+    repaySel.addEventListener('change', () => { populateType(); updateBadges(); });
+    typeSel.addEventListener('change', () => { populateApr(); updateBadges(); });
+    aprSel.addEventListener('change', updateBadges);
+    calcBtn.addEventListener('click', calc);
+    resetBtn.addEventListener('click', resetForm);
+    csvBtn.addEventListener('click', downloadCSV);
+    pdfBtn.addEventListener('click', () => window.print());
+    loanInp.addEventListener('input', () => formatCurrencyInput(loanInp));
+    unitSel.addEventListener('change', () => { const prev = currentUnit; const next = unitSel.value; convertUnitFields(prev, next); currentUnit = next; });
 
-        /* ===== محاسبات ===== */
-        function monthlyPmt(avgNeeded, B0, n, plan, timing) {
-            if (plan === "شایان") return NaN;
-            if (timing === 'end') { if (n <= 1) return Infinity; return Math.max(0, (2 * (avgNeeded - B0)) / (n - 1)); }
-            return Math.max(0, (2 * (avgNeeded - B0)) / (n + 1));
-        }
-        function calcInstallment(loan, aprPercent, months) {
-            const n = Number(months) || 0; const r = (Number(aprPercent) || 0) / 1200;
-            if (!n) return NaN;
-            if (r === 0) return loan / n;
-            const pow = Math.pow(1 + r, n);
-            return loan * r * pow / (pow - 1);
-        }
+    const root = document.documentElement;
+    const themeToggleEl = document.getElementById('themeToggle'); // نام را عوض کردم تا با نسخه‌های قبلی تداخل نکند
+    if (themeToggleEl) {
+      themeToggleEl.addEventListener('change', () => {
+        themeToggleEl.checked ? root.setAttribute('data-theme', 'dark')
+          : root.removeAttribute('data-theme');
+      });
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        themeToggleEl.checked = true;
+        root.setAttribute('data-theme', 'dark');
+      }
+    }
+    /* init */
+    updateAll(); currentUnit = unitSel ? unitSel.value : 'toman'; updateUnitLabels();
+  </script>
 
-        function updatePerDayOutputs(plan) {
-            if (!perDayRow) return;
-            perDayRow.style.display = (plan === 'نیک وام') ? '' : 'none';
-            if (plan !== 'نیک وام' || !lastAvgMonths) return;
-            const totalDays = 30 * lastAvgMonths;        // فرض ماه 30روزه
-            const perDay1m = 1_000_000 / totalDays;      // سهم معدل 1میلیون در هر روز
-            perDay1mEl.textContent = fmtMoney(perDay1m);
-            const A = fromInput(Number(toEnglishDigits(perDayAmt.value || "0"))); // تومان
-            const perDayA = A ? (A / totalDays) : 0;
-            perDayCustomEl.textContent = A ? fmtMoney(perDayA) : "-";
-        }
-
-        function calc() {
-            const plan = planSel.value;
-            const loan = fromInput(Number(toEnglishDigits(loanInp.value || "0"))); // ← تومان
-            const B0 = fromInput(Number(toEnglishDigits(initBal.value || "0"))); // ← تومان
-            const timing = (plan === "نیک وام") ? timingSel.value : 'end';
-            const s = getSelectedScheme();
-            resBox.hidden = false; minMsg.hidden = true;
-            if (!s) {
-                avgNeededEl.textContent = "-"; pmtEl.textContent = "-"; lumpExtraEl.textContent = "-"; lumpTargetEl.textContent = "-";
-                installmentEl.textContent = "-"; aprInfoEl.textContent = ""; return;
-            }
-
-            // حداقل وام
-            const minLoan = MIN_LOAN[plan] || 0;
-            if (loan < minLoan) {
-                minMsg.hidden = false;
-                minMsg.textContent = `حداقل مبلغ وام برای «${plan}» ${fmtMoney(minLoan)} ${unitLabel()} است.`;
-            }
-
-            // معدل لازم
-            const avgNeeded = loan / (s.coef / 100);
-            avgNeededEl.textContent = fmtMoney(avgNeeded);
-
-            // سپرده ثابت
-            const lumpTarget = avgNeeded;
-            const lumpExtra = Math.max(0, avgNeeded - B0);
-            lumpTargetEl.textContent = fmtMoney(lumpTarget);
-            lumpExtraEl.textContent = fmtMoney(lumpExtra);
-            avgMonthsShow.textContent = s.avg;
-
-            // --- اثر روزانه (نیک‌وام) ---
-            lastAvgMonths = s.avg;
-            updatePerDayOutputs(plan);
-
-            // واریز ماهانه (فقط نیک وام)
-            if (plan === "شایان") {
-                pmtRow.style.display = "none"; formulaNote.style.display = "none"; timingWrap.style.display = "none";
-            } else {
-                pmtRow.style.display = ""; timingWrap.style.display = "";
-                if (timingWord) timingWord.textContent = (timing === 'begin') ? 'ابتدای' : 'انتهای';
-                formulaNote.style.display = "";
-                formulaNote.textContent = (timing === 'begin')
-                    ? 'مدل معدل نیک‌وام (روزشمار): Average = B₀ + P × (n+1)/2'
-                    : 'مدل معدل نیک‌وام (روزشمار): Average = B₀ + P × (n−1)/2';
-                const pmt = monthlyPmt(avgNeeded, B0, s.avg, plan, timing);
-                pmtEl.textContent = isFinite(pmt) ? fmtMoney(Math.max(0, pmt)) : "-";
-            }
-
-            // قسط ماهانه وام
-            const apr = s && s.loanApr != null ? Number(s.loanApr) : 0;
-            const inst = calcInstallment(loan, apr, s.repay);
-            if (isFinite(inst)) {
-                installmentEl.textContent = fmtMoney(Math.ceil(inst));
-                const monthlyRate = (apr / 12).toFixed(3);
-                aprInfoEl.textContent = `| سود سالانه ${apr}% → ماهانه ${monthlyRate}% | اقساط ${s.repay}‌ماهه`;
-            } else { installmentEl.textContent = "-"; aprInfoEl.textContent = ""; }
-
-            updateBadges(); updateUnitLabels();
-        }
-
-        function resetForm() {
-            // پاک‌سازی ورودی‌ها
-            loanInp.value = "";
-            initBal.value = "";
-            perDayAmt.value = "";
-            if (optPmt) optPmt.value = "";
-            if (optLump) optLump.value = "";
-
-            // مخفی کردن نتایج فعلی
-            resBox.hidden = true;
-            minMsg.hidden = true;
-
-            // ریست کردن «پیشنهاد نهایی»
-            if (bestBox) bestBox.hidden = true;
-            if (bestSummary) bestSummary.textContent = "-";
-            if (bestWhy) bestWhy.textContent = "";
-
-            // پاک‌کردن مقادیر نمایشی داخل باکس نتیجه
-            if (avgNeededEl) avgNeededEl.textContent = "-";
-            if (lumpExtraEl) lumpExtraEl.textContent = "-";
-            if (lumpTargetEl) lumpTargetEl.textContent = "-";
-            if (pmtEl) pmtEl.textContent = "-";
-            if (installmentEl) installmentEl.textContent = "-";
-            if (aprInfoEl) aprInfoEl.textContent = "";
-
-            // اثر روزانه
-            if (perDay1mEl) perDay1mEl.textContent = "-";
-            if (perDayCustomEl) perDayCustomEl.textContent = "-";
-        }
-
-        /* CSV */
-        function downloadCSV() {
-            const header = ['plan', 'avg_months', 'repay_months', 'type', 'loan_apr', 'coef'];
-            const rows = [header].concat(SCHEMES.map(s => [s.plan, s.avg, s.repay, s.type, s.loanApr, s.coef]));
-            const lines = rows.map(r => r.map(v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"').join(',')).join('\r\n');
-            const csvText = 'sep=,\r\n' + lines;
-            function toUTF16LEWithBOM(str) {
-                const buf = new ArrayBuffer((str.length + 1) * 2); const view = new DataView(buf);
-                view.setUint16(0, 0xFEFF, true);
-                for (let i = 0; i < str.length; i++) { view.setUint16(2 + i * 2, str.charCodeAt(i), true); }
-                return buf;
-            }
-            const buf = toUTF16LEWithBOM(csvText);
-            const blob = new Blob([buf], { type: 'text/csv;charset=utf-16le;' });
-            const url = URL.createObjectURL(blob); const a = document.createElement('a');
-            a.href = url; a.download = 'loan_schemes.csv'; document.body.appendChild(a); a.click();
-            URL.revokeObjectURL(url); a.remove();
-        }
-
-        /* پیشنهاد نهایی */
-        function optimizeBest() {
-            bestBox.hidden = false; bestSummary.textContent = '-'; bestWhy.textContent = '';
-
-            const loan = fromInput(Number(toEnglishDigits(loanInp.value || '0')));
-            const B0 = fromInput(Number(toEnglishDigits(initBal.value || '0')));
-            const Pbud = fromInput(Number(toEnglishDigits(optPmt.value || '0')));
-            const Lbud = fromInput(Number(toEnglishDigits(optLump.value || '0')));
-            const timing = (timingSel ? timingSel.value : 'end');
-            if (!loan || loan <= 0) { bestSummary.textContent = 'اول مبلغ وام را وارد کنید.'; return; }
-
-            const feasible = [];
-            for (const s of SCHEMES) {
-                if (loan < (MIN_LOAN[s.plan] || 0)) continue;
-                const avgNeeded = loan / (s.coef / 100);
-                if (s.plan === 'شایان') {
-                    const total = B0 + Lbud;
-                    if (total >= avgNeeded) { feasible.push({ s, months: s.avg, mode: 'سپرده یکجا', apr: (s.loanApr == null ? null : s.loanApr) }); }
-                } else {
-                    const factor = (timing === 'begin') ? ((s.avg + 1) / 2) : Math.max((s.avg - 1) / 2, 0);
-                    const achieved = B0 + Pbud * factor;
-                    if (achieved >= avgNeeded) { feasible.push({ s, months: s.avg, mode: 'واریز ماهانه', apr: (s.loanApr == null ? 4 : s.loanApr) }); }
-                }
-            }
-            const sortFeasible = (a, b) => (a.months - b.months) || ((a.apr == null ? 99 : a.apr) - (b.apr == null ? 99 : b.apr)) || (b.s.coef - a.s.coef) || (a.s.repay - b.s.repay);
-            if (feasible.length) {
-                feasible.sort(sortFeasible);
-                const best = feasible[0]; const u = unitLabel(); const aprPart = best.apr ? (' @ ' + best.apr + '%') : '';
-                bestSummary.textContent = 'پیشنهاد: ' + best.s.plan + ' — ' + best.months + ' ماه معدل‌گیری، بازپرداخت ' + best.s.repay + ' ماه، نوع ' + best.s.type + aprPart + '.';
-                bestWhy.textContent = (best.mode === 'واریز ماهانه')
-                    ? `با واریز ماهانهٔ ${fmtMoney(Pbud)} ${u} و موجودی اولیهٔ ${fmtMoney(B0)} ${u} به میانگین لازم می‌رسید.`
-                    : `با سپردهٔ یکجای ${fmtMoney(Lbud)} ${u} و موجودی اولیهٔ ${fmtMoney(B0)} ${u} به میانگین لازم می‌رسید.`;
-                return;
-            }
-
-            let bestShayan = null, bestNik = null;
-            for (const s of SCHEMES) {
-                if (loan < (MIN_LOAN[s.plan] || 0)) continue;
-                const avgNeeded = loan / (s.coef / 100);
-                if (s.plan === 'شایان') {
-                    const needL = Math.max(0, avgNeeded - (B0 + Lbud));
-                    const cand = { s, months: s.avg, need: needL };
-                    if (!bestShayan || needL < bestShayan.need || (needL === bestShayan.need && s.avg < bestShayan.months)) bestShayan = cand;
-                } else {
-                    const denom = (timing === 'begin') ? (s.avg + 1) : (s.avg - 1);
-                    const Preq = (denom <= 0) ? Infinity : (2 * (avgNeeded - B0)) / denom;
-                    const needP = Math.max(0, Preq - Pbud);
-                    const cand = { s, months: s.avg, need: needP };
-                    if (!bestNik || needP < bestNik.need || (needP === bestNik.need && s.avg < bestNik.months)) bestNik = cand;
-                }
-            }
-            const u = unitLabel();
-            bestSummary.textContent = 'با مبالغ فعلی هیچ ترکیبی به مبلغ وام نمی‌رسد.';
-            const hints = [];
-            if (bestShayan) hints.push(`شایان: دست‌کم ${fmtMoney(bestShayan.need)} ${u} اضافه کنید تا در ${bestShayan.months} ماه واجد شرایط شوید (نوع ${bestShayan.s.type}${bestShayan.s.loanApr ? ` @ ${bestShayan.s.loanApr}%` : ''}، بازپرداخت ${bestShayan.s.repay} ماه).`);
-            if (bestNik && isFinite(bestNik.need)) hints.push(`نیک‌وام: واریز ماهانه را حداقل ${fmtMoney(bestNik.need)} ${u} افزایش دهید تا در ${bestNik.months} ماه واجد شرایط شوید (بازپرداخت ${bestNik.s.repay} ماه).`);
-            bestWhy.textContent = hints.join(' ');
-        }
-
-        /* رویدادها */
-        planSel.addEventListener('change', () => { populateAvg(); populateRepay(); populateType(); updateBadges(); updateTimingVisibility(); updatePerDayOutputs(planSel.value); });
-        avgSel.addEventListener('change', () => { populateRepay(); populateType(); updateBadges(); lastAvgMonths = Number(avgSel.value) || 0; updatePerDayOutputs(planSel.value); });
-        repaySel.addEventListener('change', () => { populateType(); updateBadges(); });
-        typeSel.addEventListener('change', () => { populateApr(); updateBadges(); });
-        aprSel.addEventListener('change', updateBadges);
-        calcBtn.addEventListener('click', calc);
-        resetBtn.addEventListener('click', resetForm);
-        csvBtn.addEventListener('click', downloadCSV);
-        optBtn.addEventListener('click', optimizeBest);
-        loanInp.addEventListener('input', () => formatCurrencyInput(loanInp));
-        initBal.addEventListener('input', () => formatCurrencyInput(initBal));
-        optPmt.addEventListener('input', () => formatCurrencyInput(optPmt));
-        optLump.addEventListener('input', () => formatCurrencyInput(optLump));
-        unitSel.addEventListener('change', () => { const prev = currentUnit; const next = unitSel.value; convertUnitFields(prev, next); currentUnit = next; });
-        pdfBtn.addEventListener('click', () => window.print());
-        themeToggle.addEventListener('change', () => { const root = document.documentElement; if (themeToggle.checked) { root.setAttribute('data-theme', 'dark'); } else { root.removeAttribute('data-theme'); } });
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { themeToggle.checked = true; document.documentElement.setAttribute('data-theme', 'dark'); }
-
-        /* تایپ مبلغ دلخواهِ اثر روزانه */
-        perDayAmt.addEventListener('input', () => { formatCurrencyInput(perDayAmt); updatePerDayOutputs(planSel.value); });
-
-        /* init */
-        populateAvg(); populateRepay(); populateType(); updateBadges(); updateTimingVisibility();
-        currentUnit = unitSel ? unitSel.value : 'toman'; updateUnitLabels();
-    </script>
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(console.error); });
+    }
+  </script>
 </body>
 
 </html>
